@@ -24,9 +24,9 @@ namespace SubscriptionService.Repository
             }
         }
 
-        public async Task<Guid> AddAsync(CreateSubscriptionDTO subscription)
+        public async Task<Guid> AddAsync(Guid UserId , Guid PlanId , DateTime nextBillingDate)
         {
-            var entity = new Subscription(subscription.UserId, subscription.PlanId);
+            var entity = new Subscription(UserId, PlanId, nextBillingDate);
             _context.Subscriptions.Add(entity);
             await _context.SaveChangesAsync();
             return entity.Id;

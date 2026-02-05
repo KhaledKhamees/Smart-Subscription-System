@@ -19,14 +19,14 @@
 
         private Subscription() { }
         
-        public Subscription(Guid userId, Guid planId)
+        public Subscription(Guid userId, Guid planId,DateTime nextBillingDate)
         {
             Id = Guid.NewGuid();
             UserId = userId;
             PlanId = planId;
             Status = SubscriptionStatus.Pending;
             StartDate = DateTime.UtcNow;
-            NextBillingDate = StartDate.AddMonths(1);
+            NextBillingDate = nextBillingDate;
         }
         public void Activate()
         {

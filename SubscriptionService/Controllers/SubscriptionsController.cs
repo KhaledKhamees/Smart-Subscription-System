@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SubscriptionService.Data.Interfaces;
+using SubscriptionService.Sync_communication.Interfaces;
 
 namespace SubscriptionService.Controllers
 {
@@ -10,10 +11,12 @@ namespace SubscriptionService.Controllers
     {
         private readonly ISubscriptionRepository _repository;
         private readonly ILogger<SubscriptionsController> _logger;
-        public SubscriptionsController(ISubscriptionRepository repository, ILogger<SubscriptionsController> logger)
+        private readonly ICatalogClient _catalogClient;
+        public SubscriptionsController(ISubscriptionRepository repository, ILogger<SubscriptionsController> logger, ICatalogClient catalogClient)
         {
             _repository = repository;
             _logger = logger;
+            _catalogClient = catalogClient;
         }
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetSubscriptionById(Guid Id)
@@ -24,7 +27,18 @@ namespace SubscriptionService.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateSubscription([FromBody] DTOs.CreateSubscriptionDTO subscription)
         {
-            var Id = await _repository.AddAsync(subscription);
+            var plan = await _catalogClient.GetPlanSummaryAsync(subscription.PlanId);
+            if (plan == null)
+            {
+                _logger.LogWarning("Plan not found: {PlanId}", subscription.PlanId);
+                return NotFound($"Plan with ID {subscription.PlanId} not found.");
+            }
+            DateTime nextBillingDate = DateTime.UtcNow.AddMonths(1);
+            if (plan.PlanType == 1)
+            {
+                nextBillingDate = DateTime.UtcNow.AddYears(1);
+            }
+            var Id = await _repository.AddAsync(subscription.UserId, subscription.PlanId, nextBillingDate);
             _logger.LogInformation("Subscription created for UserId: {UserId}", subscription.UserId);
             return CreatedAtAction(nameof(GetSubscriptionById), new { id = Id }, subscription);
         }

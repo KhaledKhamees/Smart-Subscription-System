@@ -2,8 +2,8 @@
 {
     public enum SubscriptionPlanType
     {
-        Monthly,
-        Yearly
+        Monthly=0,
+        Yearly=1
     }
     public class SubscriptionPlan
     {

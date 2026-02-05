@@ -27,6 +27,7 @@ namespace CatalogService.Repository
                         );
 
             await _context.SubscriptionPlans.AddAsync(planEntity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Guid id)
@@ -37,24 +38,30 @@ namespace CatalogService.Repository
                 throw new KeyNotFoundException($"Subscription plan with id {id} not found.");
             }
             _context.SubscriptionPlans.Remove(plan);
-             _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<SubscriptionPlan?> GetByIdAsync(Guid id)
         {
-            var plan = await _context.SubscriptionPlans.FindAsync(id);
-            if(plan == null)
+            var plan = await _context.SubscriptionPlans
+                .Where(p => p.Id == id)
+                .Where(p => _context.Products.Any(prod => prod.Id == p.ProductId && prod.IsActive))
+                .FirstOrDefaultAsync();
+
+            if (plan == null)
             {
-                throw new KeyNotFoundException($"Subscription plan with id {id} not found.");
+                throw new KeyNotFoundException($"Subscription plan with id {id} not found or is associated with an inactive product.");
             }
+
             return plan;
         }
 
         public async Task<List<SubscriptionPlan>> GetByProductIdAsync(Guid productId)
         {
             return await _context.SubscriptionPlans
-                .Where(p => p.ProductId == productId)
-                .ToListAsync();
+                    .Where(p => p.ProductId == productId)
+                    .Where(p => _context.Products.Any(prod => prod.Id == p.ProductId && prod.IsActive))
+                    .ToListAsync();
         }
 
         public Task UpdateAsync(SubscriptionPlanDTO plan)
@@ -71,7 +78,7 @@ namespace CatalogService.Repository
                 plan.TrailDays
             );
             _context.SubscriptionPlans.Update(existingPlan);
-            _context.SaveChanges(); 
+            _context.SaveChangesAsync(); 
             return Task.CompletedTask;
         }
     }

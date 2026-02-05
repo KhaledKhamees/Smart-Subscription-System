@@ -5,7 +5,7 @@ namespace SubscriptionService.Data.Interfaces
 {
     public interface ISubscriptionRepository
     {
-        Task<Guid> AddAsync(CreateSubscriptionDTO subscription);
+        Task<Guid> AddAsync(Guid UserId,Guid PlanId,DateTime nextBillingDate);
         Task<SubscriptionDTO?> GetByIdAsync(Guid id);
         Task<List<SubscriptionDTO>> GetByUserIdAsync(Guid userId);
         Task ActivateAsync(Guid id);

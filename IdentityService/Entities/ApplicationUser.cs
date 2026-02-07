@@ -8,7 +8,7 @@ namespace IdentityService.Entities
         public string LastName { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? LastLogAt { get; set; }
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
     }

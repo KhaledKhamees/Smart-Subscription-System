@@ -1,3 +1,4 @@
+using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -5,7 +6,10 @@ using Polly;
 using Polly.Extensions.Http;
 using Serilog;
 using SubscriptionService.Data.Interfaces;
+using SubscriptionService.EventContracts;
 using SubscriptionService.Repository;
+using SubscriptionService.Services;
+using SubscriptionService.Services.Interfaces;
 using SubscriptionService.Sync_communication.Interfaces;
 using System.Text;
 var builder = WebApplication.CreateBuilder(args);
@@ -28,7 +32,7 @@ builder.Services.AddSwaggerGen();
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 var secretKey = jwtSettings["SecretKey"] ?? "49SAWtHlgDXWF6uMVjyyvQv00DxYXHF4IjnEWAnB9j259aPeP2kahfjahiuajalfkja";
 
-var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]);
+var key = Encoding.UTF8.GetBytes(secretKey);
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -73,6 +77,33 @@ builder.Services.AddHttpClient<ICatalogClient, CatalogClient>(client =>
         .CircuitBreakerAsync(5, TimeSpan.FromSeconds(30))
 );
 
+// Register the subscription publisher service
+builder.Services.AddScoped<ISubscriptionPublisherService, SubscriptionPublisherService>();
+// MassTransit and RabbitMQ configuration
+builder.Services.AddMassTransit( cfg =>
+{
+    cfg.UsingRabbitMq((context, rabbitCfg) =>
+    {
+        // Configure RabbitMQ host and credentials from configuration
+        rabbitCfg.Host(builder.Configuration["RabbitMQ:Host"] ?? "localhost", h =>
+        {
+            h.Username(builder.Configuration["RabbitMQ:Username"] ?? "guest");
+            h.Password(builder.Configuration["RabbitMQ:Password"] ?? "guest");
+        });
+        // Configure JSON serializer options to use PascalCase for property names
+        rabbitCfg.ConfigureJsonSerializerOptions(options =>
+        {
+            options.PropertyNamingPolicy = null; 
+            return options;
+        });
+        // Configure message retry policy for transient failures
+        rabbitCfg.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(5)));
+        // Configure message conventions for the events
+        rabbitCfg.Message<SubscriptionCreatedEvent>(e => e.SetEntityName("subscription-created"));
+        rabbitCfg.Message<SubscriptionCanceledEvent>(e => e.SetEntityName("subscription-canceled"));
+        rabbitCfg.ConfigureEndpoints(context);
+    });
+});
 
 var app = builder.Build();
 

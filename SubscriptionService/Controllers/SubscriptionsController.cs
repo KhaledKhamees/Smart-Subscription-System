@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SubscriptionService.Data.Interfaces;
+using SubscriptionService.Services.Interfaces;
 using SubscriptionService.Sync_communication.Interfaces;
 
 namespace SubscriptionService.Controllers
@@ -13,11 +14,16 @@ namespace SubscriptionService.Controllers
         private readonly ISubscriptionRepository _repository;
         private readonly ILogger<SubscriptionsController> _logger;
         private readonly ICatalogClient _catalogClient;
-        public SubscriptionsController(ISubscriptionRepository repository, ILogger<SubscriptionsController> logger, ICatalogClient catalogClient)
+        private readonly ISubscriptionPublisherService _subscriptionPublisher;
+        public SubscriptionsController(ISubscriptionRepository repository
+                                    , ILogger<SubscriptionsController> logger
+                                    , ICatalogClient catalogClient,
+                                    ISubscriptionPublisherService subscriptionPublisher)
         {
             _repository = repository;
             _logger = logger;
             _catalogClient = catalogClient;
+            _subscriptionPublisher = subscriptionPublisher;
         }
         [HttpGet("{Id}")]
         public async Task<IActionResult> GetSubscriptionById(Guid Id)
@@ -41,6 +47,14 @@ namespace SubscriptionService.Controllers
             }
             var Id = await _repository.AddAsync(subscription.UserId, subscription.PlanId, nextBillingDate);
             _logger.LogInformation("Subscription created for UserId: {UserId}", subscription.UserId);
+            CancellationToken cancellationToken = HttpContext.RequestAborted;
+            await _subscriptionPublisher.PublishSubscriptionCreatedEventAsync( new EventContracts.SubscriptionCreatedEvent
+            {
+                SubscriptionId = Id,
+                UserId = subscription.UserId,
+                PlanId = subscription.PlanId,
+                StartDate = DateTime.UtcNow
+            },cancellationToken);
             return CreatedAtAction(nameof(GetSubscriptionById), new { id = Id }, subscription);
         }
         [HttpGet("users/{userId}")]
@@ -70,6 +84,11 @@ namespace SubscriptionService.Controllers
         {
             await _repository.CancelAsync(id);
             _logger.LogInformation("Subscription canceled: {SubscriptionId}", id);
+            await _subscriptionPublisher.PublishSubscriptionCanceledEventAsync(new EventContracts.SubscriptionCanceledEvent
+            {
+                SubscriptionId = id,
+                CanceledAt = DateTime.UtcNow
+            }, HttpContext.RequestAborted);
             return NoContent();
         }
         [HttpPut("{id}/next-billing-date")]

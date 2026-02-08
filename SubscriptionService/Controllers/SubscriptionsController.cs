@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SubscriptionService.Data.Interfaces;
 using SubscriptionService.Sync_communication.Interfaces;
@@ -56,6 +57,7 @@ namespace SubscriptionService.Controllers
             return NoContent();
         }
         [HttpPost("{id}/suspend")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> SuspendSubscription(Guid id)
         {
             await _repository.SuspendAsync(id);
@@ -63,6 +65,7 @@ namespace SubscriptionService.Controllers
             return NoContent();
         }
         [HttpPost("{id}/cancel")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CancelSubscription(Guid id)
         {
             await _repository.CancelAsync(id);

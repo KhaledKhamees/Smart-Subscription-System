@@ -2,6 +2,7 @@
 using CatalogService.Data.Interfaces;
 using CatalogService.DTOs;
 using CatalogService.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +22,7 @@ namespace CatalogService.Controllers
             _productRepository = productService;
         }
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateProduct([FromBody] ProductDTO product)
         {
             if (product == null)
@@ -66,6 +68,7 @@ namespace CatalogService.Controllers
             return Ok(products);
         }
         [HttpPost("deactivate/{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeactivateProduct(Guid id)
         {
             try
@@ -95,6 +98,7 @@ namespace CatalogService.Controllers
         }
 
         [HttpGet("inactive")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetInActiveProducts()
         {
             var products = await _productRepository.GetAllInactiveAsync();

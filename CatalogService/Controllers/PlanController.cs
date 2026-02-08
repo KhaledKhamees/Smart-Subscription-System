@@ -1,5 +1,6 @@
 ﻿using CatalogService.Data.Interfaces;
 using CatalogService.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +34,7 @@ namespace CatalogService.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreatePlan([FromBody] SubscriptionPlanDTO plan)
         {
             await _planRepository.AddAsync(plan);

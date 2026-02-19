@@ -1,54 +1,11 @@
-using BillingService.Consumers;
-using MassTransit;
-using Serilog;
-
 var builder = WebApplication.CreateBuilder(args);
-var logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(builder.Configuration)
-    .Enrich.FromLogContext()
-    .WriteTo.Console()
-    .CreateLogger();
-builder.Logging.ClearProviders();
-builder.Logging.AddSerilog(logger);// Add services to the container.
+
+// Add services to the container.
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddMassTransit(cfg =>
-{
-    // Register consumers
-    cfg.AddConsumer<SubscriptionCreatedConsumer>();
-    cfg.AddConsumer<SubscriptionCanceledConsumer>();
-
-    // Configure RabbitMQ
-    cfg.UsingRabbitMq((context, cfg) =>
-    {
-        cfg.Host(builder.Configuration["RabbitMQ:Host"] ?? "localhost", h =>
-        {
-            h.Username(builder.Configuration["RabbitMQ:Username"] ?? "guest");
-            h.Password(builder.Configuration["RabbitMQ:Password"] ?? "guest");
-        });
-
-        // Explicit receive endpoint
-        cfg.ReceiveEndpoint("billing.subscription-created", e =>
-        {
-            e.ConfigureConsumer<SubscriptionCreatedConsumer>(context);
-
-            e.UseMessageRetry(r =>
-                r.Interval(3, TimeSpan.FromSeconds(5)));
-        });
-
-        cfg.ReceiveEndpoint("billing.subscription-canceled", e =>
-        {
-            e.ConfigureConsumer<SubscriptionCanceledConsumer>(context);
-
-            e.UseMessageRetry(r =>
-                r.Interval(3, TimeSpan.FromSeconds(5)));
-        });
-    });
-});
 
 var app = builder.Build();
 

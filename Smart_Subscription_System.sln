@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IdentityService", "Identity
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{49CA26F8-3231-48FD-811E-01203511D750}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillingService", "BillingService\BillingService.csproj", "{3AEFE358-8DE6-4A75-B718-B64EBEE49848}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillingService", "BillingService\BillingService.csproj", "{A35ED690-389A-48B7-90B3-72B355E61AEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{49CA26F8-3231-48FD-811E-01203511D750}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{49CA26F8-3231-48FD-811E-01203511D750}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{49CA26F8-3231-48FD-811E-01203511D750}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3AEFE358-8DE6-4A75-B718-B64EBEE49848}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3AEFE358-8DE6-4A75-B718-B64EBEE49848}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3AEFE358-8DE6-4A75-B718-B64EBEE49848}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3AEFE358-8DE6-4A75-B718-B64EBEE49848}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A35ED690-389A-48B7-90B3-72B355E61AEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A35ED690-389A-48B7-90B3-72B355E61AEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A35ED690-389A-48B7-90B3-72B355E61AEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A35ED690-389A-48B7-90B3-72B355E61AEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -53,8 +53,11 @@ namespace SubscriptionService.Controllers
                 SubscriptionId = Id,
                 UserId = subscription.UserId,
                 PlanId = subscription.PlanId,
-                StartDate = DateTime.UtcNow
+                StartDate = DateTime.UtcNow,
+                Price = plan.Price,
+                TrialDays = plan.TrialDays
             },cancellationToken);
+            _logger.LogInformation("SubscriptionCreatedEvent published for SubscriptionId: {SubscriptionId}, Price: {Price}", Id, plan.Price);
             return CreatedAtAction(nameof(GetSubscriptionById), new { id = Id }, subscription);
         }
         [HttpGet("users/{userId}")]

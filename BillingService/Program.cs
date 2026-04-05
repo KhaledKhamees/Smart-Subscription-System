@@ -1,10 +1,10 @@
 ﻿using BillingService.Consumers;
-using BillingService.EventContracts.Publishing_Contracts;
 using BillingService.Repositories;
 using BillingService.Repositories.Interfaces;
 using BillingService.Services;
 using BillingService.Services.BackgroundServices;
 using BillingService.Services.Interfaces;
+using Contracts.Events;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -64,14 +64,23 @@ builder.Services.AddMassTransit(cfg =>
         });
 
         rabbitCfg.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(5)));
+        rabbitCfg.Message<SubscriptionCreatedEvent>(e =>
+        {
+            e.SetEntityName("subscription-created");
+        });
+
+        rabbitCfg.Message<SubscriptionCanceledEvent>(e =>
+        {
+            e.SetEntityName("subscription-canceled");
+        });
 
         // VERY IMPORTANT PART
-        rabbitCfg.ReceiveEndpoint("billing-subscription-created", e =>
+        rabbitCfg.ReceiveEndpoint("subscription-created", e =>
         {
             e.ConfigureConsumer<SubscriptionCreatedConsumer>(context);
         });
 
-        rabbitCfg.ReceiveEndpoint("billing-subscription-canceled", e =>
+        rabbitCfg.ReceiveEndpoint("subscription-canceled", e =>
         {
             e.ConfigureConsumer<SubscriptionCanceledConsumer>(context);
         });

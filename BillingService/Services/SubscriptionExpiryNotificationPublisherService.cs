@@ -1,5 +1,5 @@
-﻿using BillingService.EventContracts.Publishing_Contracts;
-using BillingService.Services.Interfaces;
+﻿using BillingService.Services.Interfaces;
+using Contracts.Events;
 using MassTransit;
 
 namespace BillingService.Services

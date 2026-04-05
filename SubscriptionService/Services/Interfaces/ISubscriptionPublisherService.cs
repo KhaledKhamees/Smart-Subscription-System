@@ -1,4 +1,4 @@
-﻿using SubscriptionService.EventContracts;
+﻿using Contracts.Events;
 
 namespace SubscriptionService.Services.Interfaces
 {

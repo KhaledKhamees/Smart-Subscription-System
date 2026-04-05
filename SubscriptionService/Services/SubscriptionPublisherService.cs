@@ -1,5 +1,5 @@
-﻿using MassTransit;
-using SubscriptionService.EventContracts;
+﻿using Contracts.Events;
+using MassTransit;
 using SubscriptionService.Services.Interfaces;
 
 namespace SubscriptionService.Services

@@ -24,6 +24,11 @@
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+    <Folder Include="EventContracts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
   </ItemGroup>
 
 </Project>

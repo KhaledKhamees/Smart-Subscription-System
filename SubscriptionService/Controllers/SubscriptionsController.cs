@@ -48,7 +48,7 @@ namespace SubscriptionService.Controllers
             var Id = await _repository.AddAsync(subscription.UserId, subscription.PlanId, nextBillingDate);
             _logger.LogInformation("Subscription created for UserId: {UserId}", subscription.UserId);
             CancellationToken cancellationToken = HttpContext.RequestAborted;
-            await _subscriptionPublisher.PublishSubscriptionCreatedEventAsync( new EventContracts.SubscriptionCreatedEvent
+            await _subscriptionPublisher.PublishSubscriptionCreatedEventAsync( new Contracts.Events.SubscriptionCreatedEvent
             {
                 SubscriptionId = Id,
                 UserId = subscription.UserId,
@@ -87,7 +87,7 @@ namespace SubscriptionService.Controllers
         {
             await _repository.CancelAsync(id);
             _logger.LogInformation("Subscription canceled: {SubscriptionId}", id);
-            await _subscriptionPublisher.PublishSubscriptionCanceledEventAsync(new EventContracts.SubscriptionCanceledEvent
+            await _subscriptionPublisher.PublishSubscriptionCanceledEventAsync(new Contracts.Events.SubscriptionCanceledEvent
             {
                 SubscriptionId = id,
                 CanceledAt = DateTime.UtcNow

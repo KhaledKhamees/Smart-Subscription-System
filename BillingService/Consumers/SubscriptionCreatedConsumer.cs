@@ -1,5 +1,5 @@
-﻿using BillingService.EventContracts;
-using BillingService.Services.Interfaces;
+﻿using BillingService.Services.Interfaces;
+using Contracts.Events;
 using MassTransit;
 
 namespace BillingService.Consumers
@@ -39,7 +39,7 @@ namespace BillingService.Consumers
                     message.StartDate,
                     message.Price,
                     message.TrialDays,
-                    message.BillingPeriod);
+                    (Models.Enum.BillingPeriod)message.BillingPeriod);
 
                 _logger.LogInformation("Successfully processed subscription creation for {SubscriptionId}",
                     message.SubscriptionId);

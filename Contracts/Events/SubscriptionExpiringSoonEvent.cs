@@ -1,4 +1,5 @@
-﻿namespace BillingService.EventContracts.Publishing_Contracts
+﻿using System;
+namespace Contracts.Events
 {
     public class SubscriptionExpiringSoonEvent
     {

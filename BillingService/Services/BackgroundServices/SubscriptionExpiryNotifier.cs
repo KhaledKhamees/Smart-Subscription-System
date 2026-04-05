@@ -1,6 +1,6 @@
 ﻿using BillingService.Data;
-using BillingService.EventContracts.Publishing_Contracts;
 using BillingService.Services.Interfaces;
+using Contracts.Events;
 using Microsoft.EntityFrameworkCore;
 
 namespace BillingService.Services.BackgroundServices

@@ -1,6 +1,6 @@
-﻿using MassTransit;
+﻿using Contracts.Events;
+using MassTransit;
 using NotificationService.Data;
-using NotificationService.EventContracts;
 using NotificationService.Models;
 using NotificationService.Services.Interfaces;
 using NotificationService.Sync_communication.Interfaces;

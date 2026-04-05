@@ -1,4 +1,4 @@
-﻿using BillingService.EventContracts.Publishing_Contracts;
+﻿using Contracts.Events;
 
 namespace BillingService.Services.Interfaces
 {

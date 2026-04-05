@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BillingService", "BillingSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotificationService", "NotificationService\NotificationService.csproj", "{5786A10A-37FA-4107-979E-E625DB05ED52}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contracts", "Contracts\Contracts.csproj", "{CEDAA807-B3FE-4A77-B620-BA1175C57ADD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{5786A10A-37FA-4107-979E-E625DB05ED52}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5786A10A-37FA-4107-979E-E625DB05ED52}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5786A10A-37FA-4107-979E-E625DB05ED52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEDAA807-B3FE-4A77-B620-BA1175C57ADD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEDAA807-B3FE-4A77-B620-BA1175C57ADD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEDAA807-B3FE-4A77-B620-BA1175C57ADD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEDAA807-B3FE-4A77-B620-BA1175C57ADD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,3 +1,4 @@
+using Contracts.Events;
 using MassTransit;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,6 @@ using Polly;
 using Polly.Extensions.Http;
 using Serilog;
 using SubscriptionService.Data.Interfaces;
-using SubscriptionService.EventContracts;
 using SubscriptionService.Repository;
 using SubscriptionService.Services;
 using SubscriptionService.Services.Interfaces;

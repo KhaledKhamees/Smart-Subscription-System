@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using NotificationService.Consumers;
 using NotificationService.Data;
-using NotificationService.EventContracts;
 using NotificationService.Services;
 using NotificationService.Services.Interfaces;
 using NotificationService.Sync_communication.HttpClients;
@@ -52,7 +51,7 @@ builder.Services.AddMassTransit(cfg =>
         rabbitCfg.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(5)));
 
         // VERY IMPORTANT PART
-        rabbitCfg.ReceiveEndpoint("notification-billing-expiredSubscription", e =>
+        rabbitCfg.ReceiveEndpoint("subscription-expiring-soon-event", e =>
         {
             e.ConfigureConsumer<SubscriptionExpiringSoonEventConsumer>(context);
         });

@@ -1,7 +1,12 @@
-﻿using BillingService.Models.Enum;
+﻿using System;
 
-namespace BillingService.EventContracts
+namespace Contracts.Events
 {
+    public enum BillingPeriod
+    {
+        Monthly = 0,
+        Yearly = 1
+    }
     public class SubscriptionCreatedEvent
     {
         public Guid SubscriptionId { get; set; }
